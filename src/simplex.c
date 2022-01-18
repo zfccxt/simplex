@@ -1,5 +1,9 @@
 #include "simplex.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct grad { double x, y, z, w; };
 
 inline struct grad create_grad(double x, double y, double z, double w) {
@@ -62,9 +66,9 @@ const double G3 = 0.16666666666; /* 1.0/6.0; */
 const double F4 = 0.30901699437; /* (sqrt(5.0)-1.0)/4.0; */
 const double G4 = 0.13819660112; /* (5.0-sqrt(5.0))/20.0; */
 
-fast_floor(double x) {
+int fast_floor(double x) {
   int xi = (int)x;
-  return x<xi ? xi-1 : xi;
+  return x < xi ? xi - 1 : xi;
 }
 
 double dot2d(struct grad* g, double x, double y) {
@@ -79,7 +83,7 @@ double dot4d(struct grad* g, double x, double y, double z, double w) {
   return g->x * x + g->y * y + g->z * z + g->w * w;
 }
 
-double noise2d(double xin, double yin) {
+double simplex_noise2d(double xin, double yin) {
   double n0, n1, n2;
   double s = (xin + yin) * F2;
   int i = fast_floor(xin + s);
@@ -132,7 +136,7 @@ double noise2d(double xin, double yin) {
   return 70.0 * (n0 + n1 + n2);
 }
 
-double noise3d(double xin, double yin, double zin) {
+double simplex_noise3d(double xin, double yin, double zin) {
   double n0, n1, n2, n3;
   double s = (xin + yin + zin) * F3;
   int i = fast_floor(xin + s);
@@ -220,7 +224,7 @@ double noise3d(double xin, double yin, double zin) {
   return 32.0 * (n0 + n1 + n2 + n3);
 }
 
-double noise4d(double x, double y, double z, double w) {
+double simplex_noise4d(double x, double y, double z, double w) {
   double n0, n1, n2, n3, n4;
   double s = (x + y + z + w) * F4;
   int i = fast_floor(x + s);
@@ -328,3 +332,7 @@ double noise4d(double x, double y, double z, double w) {
   }
   return 27.0 * (n0 + n1 + n2 + n3 + n4);
 }
+
+#ifdef __cplusplus
+}
+#endif
